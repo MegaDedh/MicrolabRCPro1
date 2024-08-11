@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Microlab RC Pro1</string>
+
+    <string name="btn_on_off">ON\n\nOFF</string>
+    <string name="btn_input">INPUT</string>
+    <string name="btn_3d">3D</string>
+    <string name="btn_treble_inc">TREB\n+</string>
+    <string name="btn_volume_inc">VOL +</string>
+    <string name="btn_bass_inc">BASS\n+</string>
+    <string name="btn_treble_dec">TREB\n-</string>
+    <string name="btn_volume_dec">VOL -</string>
+    <string name="btn_bass_dec">BASS\n-</string>
+    <string name="btn_balance_left">LEFT</string>
+    <string name="btn_mute">MUTE</string>
+    <string name="btn_balance_right">RIGHT</string>
+
+    <string name="ir_transmitter_not_found">ИК передатчик не обнаружен</string>
+</resources>
