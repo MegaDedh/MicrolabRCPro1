@@ -41,11 +41,11 @@ fun RootScreen(
     onEvent: (event: UiEvent) -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(state.hasIrEmitter) {
-        if (state.hasIrEmitter == false) {
+    LaunchedEffect(state.showMessageHasNotIrEmitter) {
+        if (state.showMessageHasNotIrEmitter == true) {
             launch {
                 snackBarHostState.showSnackbar(message = "")
+                onEvent(UiEvent.SnackBarWasShown)
             }
         }
     }
@@ -70,17 +70,17 @@ fun RootScreen(
                 RcButton(
                     textRes = R.string.btn_on_off,
                     RcButtonType.ON_OFF,
-                    onClick = { onEvent(UiEvent.OnOff) }
+                    onClick = { onEvent(UiEvent.RcEvent.OnOff) }
                 )
                 RcButton(
                     textRes = R.string.btn_input,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.Input) }
+                    onClick = { onEvent(UiEvent.RcEvent.Input) }
                 )
                 RcButton(
                     textRes = R.string.btn_3d,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.Btn3d) }
+                    onClick = { onEvent(UiEvent.RcEvent.Btn3d) }
                 )
             }
 
@@ -94,17 +94,17 @@ fun RootScreen(
                 RcButton(
                     textRes = R.string.btn_treble_inc,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.TrebleInc) }
+                    onClick = { onEvent(UiEvent.RcEvent.TrebleInc) }
                 )
                 RcButton(
                     textRes = R.string.btn_volume_inc,
                     RcButtonType.BIG,
-                    onClick = { onEvent(UiEvent.VolumeInc) }
+                    onClick = { onEvent(UiEvent.RcEvent.VolumeInc) }
                 )
                 RcButton(
                     textRes = R.string.btn_bass_inc,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.BassInc) }
+                    onClick = { onEvent(UiEvent.RcEvent.BassInc) }
                 )
             }
 
@@ -118,17 +118,17 @@ fun RootScreen(
                 RcButton(
                     textRes = R.string.btn_treble_dec,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.TrebleDec) }
+                    onClick = { onEvent(UiEvent.RcEvent.TrebleDec) }
                 )
                 RcButton(
                     textRes = R.string.btn_volume_dec,
                     RcButtonType.BIG,
-                    onClick = { onEvent(UiEvent.VolumeDec) }
+                    onClick = { onEvent(UiEvent.RcEvent.VolumeDec) }
                 )
                 RcButton(
                     textRes = R.string.btn_bass_dec,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.BassDec) }
+                    onClick = { onEvent(UiEvent.RcEvent.BassDec) }
                 )
             }
 
@@ -142,17 +142,17 @@ fun RootScreen(
                 RcButton(
                     textRes = R.string.btn_balance_left,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.BalanceLeft) }
+                    onClick = { onEvent(UiEvent.RcEvent.BalanceLeft) }
                 )
                 RcButton(
                     textRes = R.string.btn_mute,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.Mute) }
+                    onClick = { onEvent(UiEvent.RcEvent.Mute) }
                 )
                 RcButton(
                     textRes = R.string.btn_balance_right,
                     RcButtonType.NORMAL,
-                    onClick = { onEvent(UiEvent.BalanceRight) }
+                    onClick = { onEvent(UiEvent.RcEvent.BalanceRight) }
                 )
             }
         }

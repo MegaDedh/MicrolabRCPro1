@@ -27,8 +27,8 @@ import ru.smartdev.tomsk.microlabrcpro1.utils.NecProtocolConfigBuilder
 class MainActivity : ComponentActivity() {
     private val necConfig = NecProtocolConfigBuilder().build()
     private val irCommand = IrCommand(necConfig)
-    private val irManager: ConsumerIrManager by lazy {
-        getSystemService(Context.CONSUMER_IR_SERVICE) as ConsumerIrManager
+    private val irManager: ConsumerIrManager? by lazy {
+        getSystemService(Context.CONSUMER_IR_SERVICE) as? ConsumerIrManager
     }
     private val _state = MutableStateFlow(MainScreenState())
     private val state = _state.asStateFlow()
@@ -57,38 +57,56 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleUiEvent(uiEvent: UiEvent) {
-        val command = when (uiEvent) {
-            UiEvent.OnOff -> Commands.OnOff
-            UiEvent.Btn3d -> Commands.Mode3D
-            UiEvent.BalanceLeft -> Commands.BalanceLeft
-            UiEvent.BalanceRight -> Commands.BalanceRight
-            UiEvent.BassDec -> Commands.BassDec
-            UiEvent.BassInc -> Commands.BassInc
-            UiEvent.Input -> Commands.Input
-            UiEvent.Mute -> Commands.Mute
-            UiEvent.TrebleDec -> Commands.TrebleDec
-            UiEvent.TrebleInc -> Commands.TrebleInc
-            UiEvent.VolumeDec -> Commands.VolumeDec
-            UiEvent.VolumeInc -> Commands.VolumeInc
+        when (uiEvent) {
+            is UiEvent.RcEvent ->
+                handleRcEvent(uiEvent)
+
+            UiEvent.SnackBarWasShown -> {
+                _state.update { it.copy(showMessageHasNotIrEmitter = false) }
+            }
+        }
+    }
+
+    private fun handleRcEvent(rcEvent: UiEvent.RcEvent) {
+        val command = when (rcEvent) {
+            UiEvent.RcEvent.OnOff -> Commands.OnOff
+            UiEvent.RcEvent.Btn3d -> Commands.Mode3D
+            UiEvent.RcEvent.BalanceLeft -> Commands.BalanceLeft
+            UiEvent.RcEvent.BalanceRight -> Commands.BalanceRight
+            UiEvent.RcEvent.BassDec -> Commands.BassDec
+            UiEvent.RcEvent.BassInc -> Commands.BassInc
+            UiEvent.RcEvent.Input -> Commands.Input
+            UiEvent.RcEvent.Mute -> Commands.Mute
+            UiEvent.RcEvent.TrebleDec -> Commands.TrebleDec
+            UiEvent.RcEvent.TrebleInc -> Commands.TrebleInc
+            UiEvent.RcEvent.VolumeDec -> Commands.VolumeDec
+            UiEvent.RcEvent.VolumeInc -> Commands.VolumeInc
         }
         transmit(command)
     }
 
     private fun transmit(command: Commands) {
-        val pattern = irCommand.getPattern(command.address, command.command)
-        irManager.transmit(CARRIER_FREQ_38000, pattern)
+        if (irManager != null) {
+            val pattern = irCommand.getPattern(command.address, command.command)
+            irManager?.transmit(CARRIER_FREQ_38000, pattern)
+        } else {
+            hasNotEmitter()
+        }
     }
 
     private fun initIrManager() {
-        if (irManager.hasIrEmitter()) {
+        if (irManager?.hasIrEmitter() == true) {
             Log.d(APP_TAG, "IR Emitter find on the device")
-            _state.update { it.copy(hasIrEmitter = true) }
-            val carrierFrequencies = irManager.carrierFrequencies
+            val carrierFrequencies = irManager?.carrierFrequencies
             Log.d(APP_TAG, "Support Freqs: $carrierFrequencies")
         } else {
-            _state.update { it.copy(hasIrEmitter = false) }
-            Log.e(APP_TAG, "Cannot found IR Emitter on the device")
+            hasNotEmitter()
         }
+    }
+
+    private fun hasNotEmitter() {
+        _state.update { it.copy(showMessageHasNotIrEmitter = true) }
+        Log.e(APP_TAG, "Cannot found IR Emitter on the device")
     }
 
     companion object {

@@ -1,16 +1,21 @@
 package ru.smartdev.tomsk.microlabrcpro1.composable
 
 sealed interface UiEvent {
-    data object OnOff : UiEvent
-    data object Mute : UiEvent
-    data object Input : UiEvent
-    data object Btn3d : UiEvent
-    data object BalanceRight : UiEvent
-    data object TrebleInc : UiEvent
-    data object BassInc : UiEvent
-    data object BalanceLeft : UiEvent
-    data object TrebleDec : UiEvent
-    data object BassDec : UiEvent
-    data object VolumeDec : UiEvent
-    data object VolumeInc : UiEvent
+    sealed interface RcEvent:UiEvent {
+        data object OnOff : RcEvent
+        data object Mute : RcEvent
+        data object Input : RcEvent
+        data object Btn3d : RcEvent
+        data object BalanceRight : RcEvent
+        data object TrebleInc : RcEvent
+        data object BassInc : RcEvent
+        data object BalanceLeft : RcEvent
+        data object TrebleDec : RcEvent
+        data object BassDec : RcEvent
+        data object VolumeDec : RcEvent
+        data object VolumeInc : RcEvent
+    }
+
+    data object SnackBarWasShown : UiEvent
+
 }
